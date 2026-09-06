@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
-const GEMINI_MODEL = 'gemini-2.0-flash'; // free-tier model, generous limits
+const GEMINI_MODEL = 'gemini-2.5-flash-lite'; // free-tier model, generous limits
 const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
 
 async function generateIncidentSummary({ monitorName, startedAt, durationMinutes, checks }) {

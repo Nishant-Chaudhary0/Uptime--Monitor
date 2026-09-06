@@ -110,5 +110,5 @@ async function runCheckCycle() {
 
 cron.schedule(CRON_SCHEDULE, runCheckCycle);
 
-console.log('Worker started. Checking every 5 minutes.');
+console.log('Worker started. Checking every minutes.');
 runCheckCycle();

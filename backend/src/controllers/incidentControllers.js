@@ -2,16 +2,16 @@ import { prisma } from "../config/db.js";
 
 export const getAllIncidents = async(req, res) => {
    try {
-     const allIncidents = await prisma.Incident.find();
-
-    if(!allIncidents){
-        return res.status(404).json("No incidents found");
-    }
+     // Only incidents belonging to the requesting user's monitors.
+     const allIncidents = await prisma.incident.findMany({
+        where: { monitor: { user_id: req.user.id } },
+        orderBy: { started_at: 'desc' },
+     });
 
     return res.status(200).json(allIncidents)
    } catch (error) {
-    console.log("error in get all incidents route");
-    return res.status(500).json("Internal server error")
+    console.log("error in get all incidents route", error);
+    return res.status(500).json({success: false, message: "Internal server error"})
    }
 }
 
@@ -19,22 +19,22 @@ export const getIncidentById = async(req, res) => {
     const {id} = req.params;
 
     if(!id){
-        return res.status(404).json("No id found")
+        return res.status(400).json({success: false, message: "No id provided"})
     }
 
     try {
-        const incident = await prisma.Incident.find({
-        where: {id: Number(id)}
-    })
+        const incident = await prisma.incident.findFirst({
+            where: { id: Number(id), monitor: { user_id: req.user.id } }
+        })
 
-    if(!incident){
-        return res.status(404).json("No incident found")
-    }
+        if(!incident){
+            return res.status(404).json({success: false, message: "No incident found"})
+        }
 
-    return res.status(200).json(incident)
+        return res.status(200).json(incident)
     } catch (error) {
-        console.log("error in get incident by id route");
-         return res.status(500).json("Internal server error")
+        console.log("error in get incident by id route", error);
+        return res.status(500).json({success: false, message: "Internal server error"})
     }
 }
 
@@ -42,21 +42,27 @@ export const getIncidentForMonitor = async(req, res) => {
     const {id} = req.params;
 
     if(!id){
-         return res.status(404).json("No id found")
+         return res.status(400).json({success: false, message: "No id provided"})
     }
 
     try {
-        const incidentForMonitor = await prisma.Incident.FindMany({
-        where: {monitor_id: Number(id)}
-    })
+        // Verify the monitor belongs to this user before returning its incidents.
+        const monitor = await prisma.monitor.findFirst({
+            where: { id: Number(id), user_id: req.user.id }
+        });
 
-    if(!incidentForMonitor){
-        return res.status(404).json("No incident found for this monitor");
-    }
+        if(!monitor){
+            return res.status(404).json({success: false, message: "Monitor not found"});
+        }
 
-    return res.status(404).json(incidentForMonitor);
+        const incidentForMonitor = await prisma.incident.findMany({
+            where: {monitor_id: Number(id)},
+            orderBy: { started_at: 'desc' },
+        })
+
+        return res.status(200).json(incidentForMonitor);
     } catch (error) {
-          console.log("error in get incident for monitor route");
-         return res.status(500).json("Internal server error")
+        console.log("error in get incident for monitor route", error);
+        return res.status(500).json({success: false, message: "Internal server error"})
     }
 }

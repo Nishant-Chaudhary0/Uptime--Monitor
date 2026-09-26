@@ -1,0 +1,41 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  background: #F1F3F0;
+  color: #161D1A;
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+::selection {
+  background: #1F6E4A;
+  color: #F1F3F0;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #C2C9C1 transparent;
+}
+
+/* visible keyboard focus everywhere, no invisible-focus SaaS default */
+:focus-visible {
+  outline: 2px solid #1F6E4A;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+}

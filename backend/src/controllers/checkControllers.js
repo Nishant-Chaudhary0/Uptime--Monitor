@@ -5,20 +5,30 @@ export const getChecksForMonitor = async(req, res) => {
     const {id} = req.params;
 
     if(!id){
-        return res.status(404).json("No id provided");
+        return res.status(400).json({success: false, message: "No id provided"});
     }
 
     try {
-        const checks = await prisma.Check.findMany({
-      where: {monitor_id: Number(id)} ,
-      orderBy: { checked_at: 'desc' },
-      take: 500,
-    })
+        // A monitor's checks are only visible to the monitor's owner, so we
+        // verify ownership before returning any check data.
+        const monitor = await prisma.monitor.findFirst({
+            where: { id: Number(id), user_id: req.user.id }
+        });
 
-    return res.status(200).json(checks)
+        if(!monitor){
+            return res.status(404).json({success: false, message: "Monitor not found"});
+        }
+
+        const checks = await prisma.check.findMany({
+            where: {monitor_id: Number(id)} ,
+            orderBy: { checked_at: 'desc' },
+            take: 500,
+        })
+
+        return res.status(200).json(checks)
     } catch (error) {
         console.log("error in get checks by monitor route",error);
-        return res.status(500).json("internal server error")
+        return res.status(500).json({success: false, message: "Internal server error"})
     }
 };
 
@@ -32,35 +42,35 @@ export const getUpStatsTime = async (req, res) => {
   const monitorId = parseInt(req.params.id, 10);
 
   if (Number.isNaN(monitorId)) {
-    return res.status(400).json("Invalid monitor id");
+    return res.status(400).json({success: false, message: "Invalid monitor id"});
   }
 
   const result = uptimeValidation.safeParse(req.query);
 
   if (!result.success) {
-    return res.status(400).json("Please provide valid range");
+    return res.status(400).json({success: false, message: "Please provide valid range"});
   }
 
   const { range } = result.data;
   const sinceDate = new Date(Date.now() - RANGE_TO_MS[range]);
 
   try {
-    const monitor = await prisma.Monitor.findUnique({
-      where: { id: monitorId },
+    const monitor = await prisma.monitor.findFirst({
+      where: { id: monitorId, user_id: req.user.id },
     });
 
     if (!monitor) {
-      return res.status(404).json("Monitor not found");
+      return res.status(404).json({success: false, message: "Monitor not found"});
     }
 
-    const totalCheck = await prisma.Check.count({
+    const totalCheck = await prisma.check.count({
       where: {
         monitor_id: monitorId,
         checked_at: { gte: sinceDate },
       },
     });
 
-    const upCheck = await prisma.Check.count({
+    const upCheck = await prisma.check.count({
       where: {
         monitor_id: monitorId,
         checked_at: { gte: sinceDate },
@@ -71,7 +81,7 @@ export const getUpStatsTime = async (req, res) => {
     const uptimePercentage =
       totalCheck === 0 ? null : (upCheck / totalCheck) * 100;
 
-    const averageResponseTime = await prisma.Check.aggregate({
+    const averageResponseTime = await prisma.check.aggregate({
       where: {
         monitor_id: monitorId,
         checked_at: { gte: sinceDate },
@@ -82,7 +92,7 @@ export const getUpStatsTime = async (req, res) => {
       },
     });
 
-    const incidentCount = await prisma.Incident.count({
+    const incidentCount = await prisma.incident.count({
       where: {
         monitor_id: monitorId,
         started_at: { gte: sinceDate },

@@ -27,6 +27,7 @@ import {
   responseHistogram,
   uptimeColor,
   CHART_COLORS,
+  CHART_THEME,
 } from '../utils/insights'
 
 const RANGES = [
@@ -37,19 +38,7 @@ const RANGES = [
 
 const REFRESH_MS = 45_000
 
-const tickStyle = { fontSize: 11, fill: '#8B958D', fontFamily: 'JetBrains Mono' }
-const tooltipStyle = {
-  contentStyle: {
-    background: '#161D1A',
-    border: 'none',
-    borderRadius: 4,
-    fontSize: 12,
-    fontFamily: 'JetBrains Mono',
-  },
-  labelStyle: { color: '#8B958D' },
-  itemStyle: { color: '#F1F3F0' },
-  cursor: { fill: 'rgba(22,29,26,0.04)' },
-}
+const { tickStyle, tooltipStyle, labelTick } = CHART_THEME
 
 export default function MonitorDetail() {
   const { id } = useParams()
@@ -387,7 +376,7 @@ export default function MonitorDetail() {
                 type="category"
                 dataKey="label"
                 width={64}
-                tick={{ ...tickStyle, fontFamily: 'Inter', fill: '#161D1A' }}
+                tick={labelTick}
                 axisLine={false}
                 tickLine={false}
               />

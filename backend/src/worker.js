@@ -2,6 +2,7 @@
 import cron from 'node-cron';
 import { prisma } from './config/db.js';
 import { sendSlackAlert, sendResolvedAlert } from './utils/slackAlert.js';
+import { sendDownEmail, sendResolvedEmail } from './utils/emailAlert.js';
 import generateIncidentSummary from './utils/aiSummary.js';
 
 const CHECK_TIMEOUT_MS = 10000;
@@ -49,7 +50,10 @@ async function saveCheckAndDetectIncident(monitor, result) {
     await prisma.incident.create({
       data: { monitor_id: monitor.id, started_at: new Date() },
     });
-    await sendSlackAlert(monitor.name, monitor.url);
+    await Promise.all([
+      sendSlackAlert(monitor.name, monitor.url),
+      sendDownEmail(monitor.name, monitor.url, monitor.user?.email),
+    ]);
   }
 
   if (!wasUp && isUpNow) {
@@ -87,7 +91,10 @@ async function saveCheckAndDetectIncident(monitor, result) {
         },
       });
 
-      await sendResolvedAlert(monitor.name, durationMinutes);
+      await Promise.all([
+        sendResolvedAlert(monitor.name, durationMinutes),
+        sendResolvedEmail(monitor.name, durationMinutes, aiSummary, monitor.user?.email),
+      ]);
     }
   }
 }
@@ -103,7 +110,9 @@ async function processMonitor(monitor) {
 
 async function runCheckCycle() {
   console.log(`[${new Date().toISOString()}] Starting check cycle...`);
-  const monitors = await prisma.monitor.findMany();
+  const monitors = await prisma.monitor.findMany({
+    include: { user: { select: { email: true } } },
+  });
   await Promise.all(monitors.map((monitor) => processMonitor(monitor)));
   console.log(`[${new Date().toISOString()}] Check cycle complete. Checked ${monitors.length} monitors.`);
 }

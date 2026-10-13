@@ -42,7 +42,7 @@ export default function AddMonitorModal({ onClose, onCreated }) {
 
   return (
     <div
-      className="fixed inset-0 bg-ink/40 backdrop-blur-[2px] flex items-center justify-center p-4 z-50"
+      className="fixed inset-0 bg-black/60 backdrop-blur-[2px] flex items-center justify-center p-4 z-50"
       onClick={onClose}
     >
       <div

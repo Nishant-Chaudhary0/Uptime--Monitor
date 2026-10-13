@@ -3,13 +3,31 @@
 // additional requests against the backend or its quota.
 
 export const CHART_COLORS = {
-  up: '#1F6E4A',
-  upDim: '#3D8863',
-  down: '#C1432B',
-  warn: '#B8863A',
-  ink: '#161D1A',
-  faint: '#8B958D',
-  line: '#DCE1DC',
+  up: '#3DDC97',
+  upDim: '#2EAA74',
+  down: '#FF6B4A',
+  warn: '#E3B04B',
+  ink: '#9FB3A8',
+  faint: '#6F7B73',
+  line: '#26302A',
+}
+
+// Shared recharts styling for the dark theme.
+export const CHART_THEME = {
+  tickStyle: { fontSize: 11, fill: '#8B958D', fontFamily: 'JetBrains Mono' },
+  labelTick: { fontSize: 11, fill: '#E8EDE9', fontFamily: 'Inter' },
+  tooltipStyle: {
+    contentStyle: {
+      background: '#1B2420',
+      border: '1px solid #2F3B34',
+      borderRadius: 4,
+      fontSize: 12,
+      fontFamily: 'JetBrains Mono',
+    },
+    labelStyle: { color: '#8B958D' },
+    itemStyle: { color: '#E8EDE9' },
+    cursor: { fill: 'rgba(255,255,255,0.05)' },
+  },
 }
 
 export function uptimeColor(pct) {

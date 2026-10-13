@@ -23,6 +23,7 @@ Rules:
 - Always quote table names exactly as shown above, e.g. "user_monitors", "user_checks", "user_incidents".
 - Always add a LIMIT clause (max 100 rows) unless the question asks for a single aggregate value.
 - Return ONLY the raw SQL query. No explanation, no markdown code fences, no preamble.
+- Generate PostgreSQL SQL only. Never use DATE() with multiple arguments. Use column_name::date for date conversion, and NOW() - INTERVAL '7 days' for relative date filters.
 `;
 
 

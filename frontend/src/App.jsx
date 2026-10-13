@@ -3,6 +3,7 @@ import { useAuth } from './context/AuthContext'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import Dashboard from './pages/Dashboard'
+import AskAiPage from './pages/AskAiPage'
 import MonitorDetail from './pages/MonitorDetail'
 import AppShell from './components/AppShell'
 
@@ -38,6 +39,7 @@ export default function App() {
         }
       >
         <Route index element={<Dashboard />} />
+        <Route path="ask-ai" element={<AskAiPage />} />
         <Route path="monitors/:id" element={<MonitorDetail />} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />

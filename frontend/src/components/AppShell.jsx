@@ -5,6 +5,7 @@ export default function AppShell() {
   const { user, logout } = useAuth()
   const location = useLocation()
   const onDashboard = location.pathname === '/'
+  const onAskAi = location.pathname.startsWith('/ask-ai')
 
   return (
     <div className="min-h-screen bg-paper text-ink flex flex-col">
@@ -23,6 +24,14 @@ export default function AppShell() {
               } transition-colors`}
             >
               Overview
+            </Link>
+            <Link
+              to="/ask-ai"
+              className={`text-sm ${
+                onAskAi ? 'text-ink font-medium' : 'text-ink-soft hover:text-ink'
+              } transition-colors`}
+            >
+              Ask AI
             </Link>
             <div className="h-4 w-px bg-line" />
             <div className="flex items-center gap-3">
@@ -59,11 +68,11 @@ export default function AppShell() {
 export function PulseMark({ size = 22 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 32 32" className="shrink-0">
-      <rect width="32" height="32" rx="6" fill="#161D1A" />
+      <rect width="32" height="32" rx="6" fill="#1B2420" stroke="#2F3B34" />
       <polyline
         points="4,18 10,18 13,8 18,24 21,14 24,18 28,18"
         fill="none"
-        stroke="#1F6E4A"
+        stroke="#3DDC97"
         strokeWidth="2.4"
         strokeLinecap="round"
         strokeLinejoin="round"

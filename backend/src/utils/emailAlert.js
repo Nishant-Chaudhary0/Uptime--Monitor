@@ -1,23 +1,30 @@
-import dotenv from 'dotenv'
+import dotenv from 'dotenv';
 import nodemailer from 'nodemailer';
+import { userEmail } from '../controllers/authController.js';
+dotenv.config();
 
 // Create the transporter once, reused across all send calls
 // (creating a new connection per email would be slow and wasteful)
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: process.env.EMAIL_USER,
+    user: userEmail,
     pass: process.env.EMAIL_PASS,
   },
 });
 
-async function sendDownEmail(monitorName, url) {
-  if (!process.env.EMAIL_USER || !process.env.ALERT_EMAIL_TO) return;
+// ALERT_EMAIL_TO is optional now - if set, it's bcc'd on every alert so an
+// admin/ops inbox can keep visibility across all users' monitors.
+const adminBcc = process.env.ALERT_EMAIL_TO || undefined;
+
+async function sendDownEmail(monitorName, url, recipientEmail) {
+  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS || !recipientEmail) return;
 
   try {
     await transporter.sendMail({
-      from: `"apiHealth Monitor" <${process.env.EMAIL_USER}>`,
-      to: process.env.ALERT_EMAIL_TO,
+      from: `"Uptime Monitor" <${process.env.EMAIL_USER}>`,
+      to: recipientEmail,
+      bcc: adminBcc,
       subject: `🔴 ${monitorName} is DOWN`,
       html: `
         <h2 style="color:#d92d20;">${monitorName} is currently DOWN</h2>
@@ -31,13 +38,14 @@ async function sendDownEmail(monitorName, url) {
   }
 }
 
-async function sendResolvedEmail(monitorName, durationMinutes, aiSummary) {
-  if (!process.env.EMAIL_USER || !process.env.ALERT_EMAIL_TO) return;
+async function sendResolvedEmail(monitorName, durationMinutes, aiSummary, recipientEmail) {
+  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS || !recipientEmail) return;
 
   try {
     await transporter.sendMail({
       from: `"Uptime Monitor" <${process.env.EMAIL_USER}>`,
-      to: process.env.ALERT_EMAIL_TO,
+      to: recipientEmail,
+      bcc: adminBcc,
       subject: `✅ ${monitorName} is back UP`,
       html: `
         <h2 style="color:#12b76a;">${monitorName} has recovered</h2>
@@ -51,4 +59,4 @@ async function sendResolvedEmail(monitorName, durationMinutes, aiSummary) {
   }
 }
 
-module.exports = { sendDownEmail, sendResolvedEmail };
+export { sendDownEmail, sendResolvedEmail };

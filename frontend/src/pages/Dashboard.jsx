@@ -17,7 +17,6 @@ import StatCard from '../components/StatCard'
 import StatusPill from '../components/StatusPill'
 import HeartbeatBar from '../components/HeartbeatBar'
 import AddMonitorModal from '../components/AddMonitorModal'
-import AskAi from '../components/AskAi'
 import ChartCard from '../components/ChartCard'
 import LegendRow from '../components/LegendRow'
 import {
@@ -27,24 +26,13 @@ import {
   monitorUptimeRanking,
   monitorResponseComparison,
   CHART_COLORS,
+  CHART_THEME,
 } from '../utils/insights'
 
 // Cheap DB-backed refresh only (no AI calls) — safe to run on an interval.
 const REFRESH_MS = 45_000
 
-const tickStyle = { fontSize: 11, fill: '#8B958D', fontFamily: 'JetBrains Mono' }
-const tooltipStyle = {
-  contentStyle: {
-    background: '#161D1A',
-    border: 'none',
-    borderRadius: 4,
-    fontSize: 12,
-    fontFamily: 'JetBrains Mono',
-  },
-  labelStyle: { color: '#8B958D' },
-  itemStyle: { color: '#F1F3F0' },
-  cursor: { fill: 'rgba(22,29,26,0.04)' },
-}
+const { tickStyle, tooltipStyle, labelTick } = CHART_THEME
 
 export default function Dashboard() {
   const [monitors, setMonitors] = useState(null)
@@ -188,7 +176,7 @@ export default function Dashboard() {
                   type="category"
                   dataKey="name"
                   width={110}
-                  tick={{ ...tickStyle, fontFamily: 'Inter', fill: '#161D1A' }}
+                  tick={labelTick}
                   axisLine={false}
                   tickLine={false}
                 />
@@ -225,7 +213,7 @@ export default function Dashboard() {
                   type="category"
                   dataKey="name"
                   width={110}
-                  tick={{ ...tickStyle, fontFamily: 'Inter', fill: '#161D1A' }}
+                  tick={labelTick}
                   axisLine={false}
                   tickLine={false}
                 />
@@ -284,10 +272,6 @@ export default function Dashboard() {
           </ChartCard>
         </div>
       )}
-
-      <div className="mb-8">
-        <AskAi />
-      </div>
 
       <div className="border border-line bg-surface rounded overflow-hidden">
         <div className="px-5 py-3.5 border-b border-line flex items-center justify-between">

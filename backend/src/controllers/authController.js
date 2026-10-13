@@ -43,6 +43,8 @@ export const register = async (req, res) => {
     }
 };
 
+export const userEmail = undefined;
+
 export const login = async (req, res) => {
     const result = loginSchema.safeParse(req.body);
 
@@ -69,6 +71,8 @@ export const login = async (req, res) => {
         }
 
         const token = generateToken({ id: user.id, email: user.email });
+
+        userEmail = email;
 
         return res.status(200).json({
             success: true,
@@ -100,3 +104,5 @@ export const getMe = async (req, res) => {
         return res.status(500).json({ success: false, message: "Internal server error" });
     }
 };
+
+

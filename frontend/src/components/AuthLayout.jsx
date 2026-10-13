@@ -12,7 +12,7 @@ const LOG_LINES = [
 export default function AuthLayout({ title, subtitle, children }) {
   return (
     <div className="min-h-screen bg-paper flex">
-      <div className="hidden lg:flex lg:w-[46%] bg-ink text-paper flex-col justify-between p-10 relative overflow-hidden">
+      <div className="hidden lg:flex lg:w-[46%] bg-surface border-r border-line text-ink flex-col justify-between p-10 relative overflow-hidden">
         <div className="flex items-center gap-2.5">
           <PulseMark />
           <span className="font-semibold tracking-tight text-[17px]">Pulseboard</span>
@@ -23,7 +23,7 @@ export default function AuthLayout({ title, subtitle, children }) {
             <polyline
               points="0,60 60,60 78,20 100,100 122,60 400,60"
               fill="none"
-              stroke="#3D8863"
+              stroke="#3DDC97"
               strokeWidth="2"
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -40,7 +40,7 @@ export default function AuthLayout({ title, subtitle, children }) {
           <h2 className="text-2xl font-semibold leading-snug mb-3 max-w-sm">
             Know the moment something goes quiet.
           </h2>
-          <p className="text-paper/60 text-[15px] leading-relaxed max-w-sm">
+          <p className="text-ink-soft text-[15px] leading-relaxed max-w-sm">
             Pulseboard checks your endpoints on a schedule you set, and tells you
             the instant one stops answering.
           </p>
@@ -48,7 +48,7 @@ export default function AuthLayout({ title, subtitle, children }) {
 
         <div className="font-mono text-xs space-y-1.5 relative z-10">
           {LOG_LINES.map((l, i) => (
-            <div key={i} className="flex items-center gap-3 text-paper/50">
+            <div key={i} className="flex items-center gap-3 text-ink-faint">
               <span className={l.code >= 400 ? 'text-down' : 'text-signal-dim'}>
                 {l.code >= 400 ? '✕' : '✓'}
               </span>

@@ -3,28 +3,43 @@
 @tailwind utilities;
 
 html {
+  color-scheme: dark;
+  background: #0B0F0D;
   -webkit-font-smoothing: antialiased;
 }
 
 body {
-  background: #F1F3F0;
-  color: #161D1A;
+  background: #0B0F0D;
+  color: #E8EDE9;
   font-family: 'Inter', system-ui, sans-serif;
 }
 
 ::selection {
-  background: #1F6E4A;
-  color: #F1F3F0;
+  background: #3DDC97;
+  color: #0B0F0D;
 }
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: #C2C9C1 transparent;
+  scrollbar-color: #3A473F transparent;
 }
 
-/* visible keyboard focus everywhere, no invisible-focus SaaS default */
+input,
+select,
+textarea {
+  background-color: #0B0F0D;
+  color: #E8EDE9;
+  outline: none;
+}
+
+input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 100px #0B0F0D inset;
+  -webkit-text-fill-color: #E8EDE9;
+}
+
+/* visible keyboard focus everywhere */
 :focus-visible {
-  outline: 2px solid #1F6E4A;
+  outline: 2px solid #3DDC97;
   outline-offset: 2px;
 }
 
@@ -39,3 +54,40 @@ body {
 .tabular {
   font-variant-numeric: tabular-nums;
 }
+
+/* ---- Dark theme: forces the app's color tokens to dark values, so it works
+   without any tailwind.config.js changes. ---- */
+.bg-down { background-color: rgb(255 107 74) !important; }
+.bg-down-soft { background-color: rgb(255 107 74 / 0.12) !important; }
+.bg-ink { background-color: rgb(232 237 233) !important; }
+.bg-ink-faint { background-color: rgb(117 128 120) !important; }
+.bg-line\/40 { background-color: rgb(38 48 42 / 0.4) !important; }
+.bg-line { background-color: rgb(38 48 42) !important; }
+.bg-paper { background-color: rgb(11 15 13) !important; }
+.bg-signal { background-color: rgb(61 220 151) !important; }
+.bg-signal-soft { background-color: rgb(61 220 151 / 0.12) !important; }
+.bg-surface { background-color: rgb(18 24 21) !important; }
+.border-down\/20 { border-color: rgb(255 107 74 / 0.2) !important; }
+.border-down\/30 { border-color: rgb(255 107 74 / 0.3) !important; }
+.border-line { border-color: rgb(38 48 42) !important; }
+.border-signal\/30 { border-color: rgb(61 220 151 / 0.3) !important; }
+.text-down { color: rgb(255 107 74) !important; }
+.text-ink { color: rgb(232 237 233) !important; }
+.text-ink-faint { color: rgb(117 128 120) !important; }
+.text-ink-soft { color: rgb(164 175 167 / 0.12) !important; }
+.text-paper { color: rgb(11 15 13) !important; }
+.text-signal { color: rgb(61 220 151) !important; }
+.text-signal-dim { color: rgb(46 170 116) !important; }
+.focus\:border-signal:focus { border-color: rgb(61 220 151) !important; }
+.hover\:bg-down-soft:hover { background-color: rgb(255 107 74 / 0.12) !important; }
+.hover\:bg-paper\/60:hover { background-color: rgb(11 15 13 / 0.6) !important; }
+.hover\:bg-paper:hover { background-color: rgb(11 15 13) !important; }
+.hover\:bg-signal:hover { background-color: rgb(61 220 151) !important; }
+.hover\:border-down\/40:hover { border-color: rgb(255 107 74 / 0.4) !important; }
+.hover\:border-line-strong:hover { border-color: rgb(58 71 63) !important; }
+.hover\:border-signal:hover { border-color: rgb(61 220 151) !important; }
+.hover\:text-down:hover { color: rgb(255 107 74) !important; }
+.hover\:text-ink:hover { color: rgb(232 237 233) !important; }
+.hover\:text-ink-soft:hover { color: rgb(164 175 167 / 0.12) !important; }
+.hover\:text-signal:hover { color: rgb(61 220 151) !important; }
+.placeholder\:text-ink-faint::placeholder { color: rgb(117 128 120) !important; }

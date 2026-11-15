@@ -1,12 +1,12 @@
 
-import cron from 'node-cron';
+// import cron from 'node-cron';
 import { prisma } from './config/db.js';
 import { sendSlackAlert, sendResolvedAlert } from './utils/slackAlert.js';
 import { sendDownEmail, sendResolvedEmail } from './utils/emailAlert.js';
 import generateIncidentSummary from './utils/aiSummary.js';
 
 const CHECK_TIMEOUT_MS = 10000;
-const CRON_SCHEDULE = '* * * * *';
+// const CRON_SCHEDULE = '* * * * *';
      
 async function checkUrl(url) {
   const start = Date.now();
@@ -117,7 +117,19 @@ async function runCheckCycle() {
   console.log(`[${new Date().toISOString()}] Check cycle complete. Checked ${monitors.length} monitors.`);
 }
 
-cron.schedule(CRON_SCHEDULE, runCheckCycle);
+// cron.schedule(CRON_SCHEDULE, runCheckCycle);
 
-console.log('Worker started. Checking every minutes.');
-runCheckCycle();
+// console.log('Worker started. Checking every minutes.');
+// runCheckCycle();
+
+console.log('Worker started. Running check cycle...');
+
+runCheckCycle()
+  .catch((error) => {
+    console.error('Check cycle failed:', error);
+    process.exitCode = 1;
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
+    console.log('Worker execution finished.');
+  });

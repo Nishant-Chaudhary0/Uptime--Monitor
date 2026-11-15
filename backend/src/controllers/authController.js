@@ -43,7 +43,7 @@ export const register = async (req, res) => {
     }
 };
 
-// export const userEmail = undefined;
+export const userEmail = undefined;
 
 export const login = async (req, res) => {
     const result = loginSchema.safeParse(req.body);

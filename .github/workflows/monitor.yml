@@ -34,7 +34,7 @@ jobs:
         run: npx prisma generate
 
       - name: Run monitoring worker
-        run: node worker.js
+        run: node src/worker.js
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}

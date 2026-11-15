@@ -43,7 +43,7 @@ export const register = async (req, res) => {
     }
 };
 
-export const userEmail = undefined;
+// export const userEmail = undefined;
 
 export const login = async (req, res) => {
     const result = loginSchema.safeParse(req.body);
@@ -58,7 +58,7 @@ export const login = async (req, res) => {
     const { email, password } = result.data;
 
     try {
-        const user = await prisma.user.findUnique({ where: { email } });
+        let user = await prisma.user.findUnique({ where: { email } });
 
         if (!user) {
             return res.status(401).json({ success: false, message: "Invalid email or password" });
@@ -72,7 +72,7 @@ export const login = async (req, res) => {
 
         const token = generateToken({ id: user.id, email: user.email });
 
-        userEmail = email;
+        // userEmail = email;
 
         return res.status(200).json({
             success: true,

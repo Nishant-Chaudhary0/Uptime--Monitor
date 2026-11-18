@@ -16,7 +16,7 @@ const port = process.env.PORT ;
 app.use(cors({
     origin: [
          "http://localhost:5173",
-        "https://uptime-monitor-q2zq.vercel.app"
+        "https://uptime-monitor-2ic1.vercel.app"
     ]
 }));
 app.use(express.json());
